@@ -5,6 +5,7 @@ import com.aman.blog.blogrestapi.exceptions.ResourceNotFoundException;
 import com.aman.blog.blogrestapi.payload.PostDto;
 import com.aman.blog.blogrestapi.repository.PostRepository;
 import com.aman.blog.blogrestapi.service.PostService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +40,25 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long id) {
-        Post post=postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Post","title",id));
+        Post post=postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Post","id",id));
         return mapToDto(post);
+    }
+
+    @Override
+    public PostDto updatePostById(PostDto postDto, Long id) {
+       //get post by id from database
+        Post post=postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Post","id",id));
+        post.setTitle(postDto.getTitle());
+        post.setDescription(postDto.getDescription());
+        post.setContent(postDto.getContent());
+        Post updatedPost=postRepository.save(post);
+        return mapToDto(updatedPost);
+    }
+
+    @Override
+    public void deletePostByid(Long id) {
+        Post post=postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Post","id",id));
+        postRepository.delete(post);
     }
 
     //convert entity to dto
