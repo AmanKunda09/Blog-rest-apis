@@ -10,7 +10,7 @@ public interface PostService {
     PostDto createPost(PostDto postDto);
 
     PostResponse getAllPost(int pageNo, int pageSize,String sortBy,String sortDir);
-    PostDto getPostById(Long id);
-    PostDto updatePostById(PostDto postDto,Long id);
-    void deletePostByid(Long id);
+    PostDto getPostById(long id);
+    PostDto updatePostById(PostDto postDto,long id);
+    void deletePostByid(long id);
 }
