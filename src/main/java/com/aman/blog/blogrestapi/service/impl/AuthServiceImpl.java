@@ -7,6 +7,7 @@ import com.aman.blog.blogrestapi.payload.LoginDto;
 import com.aman.blog.blogrestapi.payload.RegisterDto;
 import com.aman.blog.blogrestapi.repository.RoleRepository;
 import com.aman.blog.blogrestapi.repository.UserRepository;
+import com.aman.blog.blogrestapi.security.JwtTokenProvider;
 import com.aman.blog.blogrestapi.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,12 +27,18 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
@@ -40,7 +47,8 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(),loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User logged in successfully";
+        String token= jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 
     @Override

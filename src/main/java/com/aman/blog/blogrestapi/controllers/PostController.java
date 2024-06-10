@@ -42,7 +42,10 @@ public class PostController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePostById(@RequestBody PostDto postDto,@PathVariable long id){
-        return new ResponseEntity<>(postService.updatePostById(postDto,id),HttpStatus.OK);
+
+        PostDto postResponse=postService.updatePostById(postDto,id);
+
+        return new ResponseEntity<>(postResponse,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
